@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">XWaste</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="default_web_client_id">960862163436-qm5ii3d0fsur2rppbt0pg1ajjshg9qlh.apps.googleusercontent.com</string>
+    <string name="title_activity_dashboard_screen">DashboardScreen</string>
+    <string name="title_activity_register_household_screen">RegisterHouseholdScreen</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_garbage_bins_screen">GarbageBinsScreen</string>
+    <string name="title_activity_subscription_screen">SubscriptionScreen</string>
+    <string name="title_activity_scheduling_screen">SchedulingScreen</string>
+    <string name="title_activity_payment_screen">PaymentScreen</string>
+    <string name="title_activity_feedback_screen">FeedbackScreen</string>
+
+</resources>
+

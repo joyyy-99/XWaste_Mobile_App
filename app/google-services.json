@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "960862163436",
+    "project_id": "xwaste123",
+    "storage_bucket": "xwaste123.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960862163436:android:195cf3136fc2f4e88930c9",
+        "android_client_info": {
+          "package_name": "com.example.xwaste"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960862163436-hgptuhvgdb0qft5ihooq3pk5j6f8ahkm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.xwaste",
+            "certificate_hash": "ced4448983e3b7dc5abe263ad728bfd26be36dc9"
+          }
+        },
+        {
+          "client_id": "960862163436-qm5ii3d0fsur2rppbt0pg1ajjshg9qlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM67hjWjMDxxljHUsibiMpReDwIjV-qxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960862163436-qm5ii3d0fsur2rppbt0pg1ajjshg9qlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

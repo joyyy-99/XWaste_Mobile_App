@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.XWaste"
+        tools:targetApi="31">
+        <activity
+            android:name=".FeedbackScreen"
+            android:exported="false"
+            android:label="@string/title_activity_feedback_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".PaymentScreen"
+            android:exported="false"
+            android:label="@string/title_activity_payment_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".SchedulingScreen"
+            android:exported="false"
+            android:label="@string/title_activity_scheduling_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".SubscriptionScreen"
+            android:exported="false"
+            android:label="@string/title_activity_subscription_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".GarbageBinsScreen"
+            android:exported="false"
+            android:label="@string/title_activity_garbage_bins_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".RegisterHouseholdScreen"
+            android:exported="false"
+            android:label="@string/title_activity_register_household_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".DashboardScreen"
+            android:exported="false"
+            android:label="@string/title_activity_dashboard_screen"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".SignInActivity"
+            android:exported="false"
+            android:label="@string/title_activity_sign_in"
+            android:theme="@style/Theme.XWaste" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.XWaste">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
