@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.xwaste"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.xwaste"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -81,4 +81,6 @@ dependencies {
     implementation(libs.compose.material.icons.core)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.foundation)
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation(libs.firebase.database.ktx)
 }
