@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -45,6 +46,7 @@ fun FeedbackScreen() {
             onValueChange = { email.value = it },
             label = { Text("Email") },
             placeholder = { Text("Enter your email") },
+            textStyle = TextStyle(color = Color.Black), // Set text color to black
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
@@ -56,6 +58,7 @@ fun FeedbackScreen() {
             onValueChange = { message.value = it },
             label = { Text("Message") },
             placeholder = { Text("Enter your feedback") },
+            textStyle = TextStyle(color = Color.Black), // Set text color to black
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
