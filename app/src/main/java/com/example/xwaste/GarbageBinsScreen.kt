@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import androidx.compose.ui.layout.ContentScale
+
 
 @Composable
 fun GarbageBinsScreen() {
@@ -140,9 +143,10 @@ fun GarbageBinOptionWithCheckbox(
 
         // Garbage Bin Image
         Image(
-            painter = painterResource(id = imageResId),
-            contentDescription = label,
-            modifier = Modifier.size(80.dp)
+            painter = rememberAsyncImagePainter(imageResId),
+            contentDescription = null,
+            modifier = Modifier.size(80.dp),
+            contentScale = ContentScale.Crop
         )
     }
 }

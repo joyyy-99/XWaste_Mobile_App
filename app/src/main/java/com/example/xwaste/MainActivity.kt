@@ -47,12 +47,12 @@ fun XWasteApp() {
             DashboardScreen(onNavigate = { route -> navController.navigate(route) })
         }
         composable("register") {
-            RegisterHouseholdScreen() // Display UI-only Register Household screen
+            RegisterHouseholdScreen(onNavigate = { route -> navController.navigate(route) }) // Display UI-only Register Household screen
         }
         composable("bins") { GarbageBinsScreen() }
         composable("subscribe") { SubscriptionScreen() }
         composable("schedule") { SchedulingScreen() }
         composable("payment") { PaymentScreen() }
-        composable("feedback") { FeedbackScreen() }
+        composable("feedback") { FeedbackScreen(onNavigate = { route -> navController.navigate(route) }) }
     }
 }

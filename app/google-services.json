@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "960862163436",
+    "firebase_url": "https://xwaste123-default-rtdb.firebaseio.com",
     "project_id": "xwaste123",
     "storage_bucket": "xwaste123.firebasestorage.app"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.example.xwaste",
             "certificate_hash": "ced4448983e3b7dc5abe263ad728bfd26be36dc9"
+          }
+        },
+        {
+          "client_id": "960862163436-vm429pisuhmqu9sadav6spu6brn9s2g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.xwaste",
+            "certificate_hash": "7890fa8a2b86803c0e51dcc3e57a306f1afbe91c"
           }
         },
         {

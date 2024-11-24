@@ -26,6 +26,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.focus.*
+import androidx.compose.ui.text.input.VisualTransformation
 
 class SignInActivity : ComponentActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -159,103 +164,172 @@ fun SignInScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(Color(0xFFF5F5F5)) // White background
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .padding(16.dp),
-            elevation = CardDefaults.cardElevation(8.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+            // XWaste Logo
+            Image(
+                painter = painterResource(id = R.drawable.logo), // Replace with your logo
+                contentDescription = "XWaste Logo",
+                modifier = Modifier
+                    .size(80.dp) // Adjust as needed
+            )
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .padding(16.dp)
+                    .background(Color.White),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(8.dp)
             ) {
-                Text(
-                    text = if (isLoginMode) "Login" else "Register",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
-                if (!isLoginMode) {
-                    TextField(
-                        value = username,
-                        onValueChange = { username = it },
-                        label = { Text("Username") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    TextField(
-                        value = phone,
-                        onValueChange = { phone = it },
-                        label = { Text("Phone Number") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                if (!isLoginMode) {
-                    TextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
-                        label = { Text("Confirm Password") },
-                        visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                Button(
-                    onClick = {
-                        if (isLoginMode) {
-                            onLoginClick(email, password)
-                        } else {
-                            if (password == confirmPassword) {
-                                onRegisterClick(username, email, phone, password)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Passwords do not match",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text(if (isLoginMode) "Login" else "Register")
-                }
-
-                TextButton(onClick = { isLoginMode = !isLoginMode }) {
-                    Text(if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login")
-                }
-
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-                Button(
-                    onClick = onGoogleSignInClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                    // Title
                     Text(
-                        text = "Sign in with Google",
-                        color = Color.Black,
-                        fontSize = 16.sp
+                        text = if (isLoginMode) "Login" else "Register",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = Color.Black // Text color
                     )
+
+                    // Input Fields
+                    if (!isLoginMode) {
+                        CustomTextField(value = username, label = "Username") { username = it }
+                        CustomTextField(value = phone, label = "Phone Number") { phone = it }
+                    }
+                    CustomTextField(value = email, label = "Email") { email = it }
+                    CustomTextField(
+                        value = password,
+                        label = "Password",
+                        isPassword = true
+                    ) { password = it }
+
+                    if (!isLoginMode) {
+                        CustomTextField(
+                            value = confirmPassword,
+                            label = "Confirm Password",
+                            isPassword = true
+                        ) { confirmPassword = it }
+                    }
+
+                    // Buttons
+                    Button(
+                        onClick = {
+                            if (isLoginMode) {
+                                onLoginClick(email, password)
+                            } else {
+                                if (password == confirmPassword) {
+                                    onRegisterClick(username, email, phone, password)
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Passwords do not match",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black,
+                            contentColor = Color.White // White text
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (isLoginMode) "Login" else "Register")
+                    }
+
+                    // Toggle between Login/Register
+                    TextButton(onClick = { isLoginMode = !isLoginMode }) {
+                        Text(
+                            if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login",
+                            color = Color.Black
+                        )
+                    }
+
+                    if (isLoginMode) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            HorizontalDivider(
+                                modifier = Modifier.weight(1f),
+                                color = Color.Gray
+                            )
+                            Text(
+                                text = "or",
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                                color = Color.Gray
+                            )
+                            HorizontalDivider(
+                                modifier = Modifier.weight(1f),
+                                color = Color.Gray
+                            )
+                        }
+
+                        // Google Sign-In Button
+                        Button(
+                            onClick = onGoogleSignInClick,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Black,
+                                contentColor = Color.White,
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Sign in with Google",
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
                 }
             }
         }
     }
+}
+
+// Custom TextField with focus change colors
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTextField(
+    value: String,
+    label: String,
+    isPassword: Boolean = false,
+    onValueChange: (String) -> Unit
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    val backgroundColor = if (isFocused) Color.White else Color.White
+    val textColor = if (isFocused) Color.Black else Color.Black
+
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, color = textColor) },
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(backgroundColor)
+            .border(1.dp, Color.Black, shape = MaterialTheme.shapes.small)
+            .background(Color.White)
+            .onFocusChanged { isFocused = it.isFocused },
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = backgroundColor,
+            focusedTextColor = textColor,
+            unfocusedTextColor = Color.Black,
+            focusedLabelColor = Color.LightGray,
+            unfocusedLabelColor = Color.White,
+            cursorColor = Color.Black,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+
+    )
 }
