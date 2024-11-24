@@ -83,5 +83,8 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation(libs.firebase.database.ktx)
-    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation ("com.google.firebase:firebase-database-ktx:20.4.0")
+    implementation("org.osmdroid:osmdroid-android:6.1.15")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+
 }
