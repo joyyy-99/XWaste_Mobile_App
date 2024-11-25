@@ -1,136 +1,160 @@
 package com.example.xwaste
 
+import android.content.Intent
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.clickable
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PaymentScreen() {
-    var selectedPlan by remember { mutableStateOf("Monthly") }
-    var paymentDate by remember { mutableStateOf("Select Date") }
-    var expanded by remember { mutableStateOf(false) }
-    var selectedPaymentMethod by remember { mutableStateOf("") }
-    val paymentMethods = listOf("Pay with Card", "Pay with Cash")
+fun PaymentScreen(onNavigate: (String) -> Unit) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    var cardNumber by remember { mutableStateOf("") }
+    var expiryDate by remember { mutableStateOf("") }
+    var cvv by remember { mutableStateOf("") }
+
+    ModalNavigationDrawer(
+        drawerContent = {
+            SideMenu(onClose = { scope.launch { drawerState.close() } }, onNavigate = onNavigate)
+        },
+        drawerState = drawerState
     ) {
-        Text(
-            text = "Make a Payment",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // Subscription Plan
-        Text("Subscription Plan:", fontSize = 16.sp)
-        Column(modifier = Modifier.padding(vertical = 8.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = selectedPlan == "Monthly",
-                    onClick = { selectedPlan = "Monthly" },
-                    colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
-                )
-                Text(text = "100 per month", fontSize = 14.sp)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = selectedPlan == "Yearly",
-                    onClick = { selectedPlan = "Yearly" },
-                    colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
-                )
-                Text(text = "1099 per year", fontSize = 14.sp)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Payment Date Picker
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            OutlinedTextField(
-                value = paymentDate,
-                onValueChange = {},
-                label = { Text("Payment Date") },
-                enabled = false,
-                modifier = Modifier.weight(1f)
-            )
-            IconButton(onClick = {
-                // Mock date selection for now
-                paymentDate = "07/09/2024"
-            }) {
-                Icon(
-                    imageVector = Icons.Default.CalendarToday,
-                    contentDescription = "Select Date"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Payment Method Dropdown
-        Text("Payment Method:", fontSize = 16.sp, modifier = Modifier.padding(bottom = 8.dp))
-        Box {
-            OutlinedTextField(
-                value = selectedPaymentMethod,
-                onValueChange = {},
-                label = { Text("Select a payment method") },
-                readOnly = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Dropdown Icon",
-                        Modifier.clickable { expanded = true }
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("XWaste", style = MaterialTheme.typography.titleMedium)
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            val intent = Intent(context, AccountActivity::class.java)
+                            context.startActivity(intent)
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.account), // Replace with your account icon resource
+                                contentDescription = "Account Settings",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.logout),
+                            contentDescription = "Logout",
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clickable {
+                                    FirebaseAuth.getInstance().signOut()
+                                    val intent = Intent(context, SignInActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    context.startActivity(intent)
+                                }
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White,
+                        titleContentColor = Color.Black
                     )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                paymentMethods.forEach { method ->
-                    DropdownMenuItem(onClick = {
-                        selectedPaymentMethod = method
-                        expanded = false
-                    }) {
-                        Text(text = method)
+                )
+            },
+            content = { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Card Payment",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    // Card Number
+                    OutlinedTextField(
+                        value = cardNumber,
+                        onValueChange = { cardNumber = it },
+                        label = { Text("Card Number") },
+                        placeholder = { Text("1234 5678 9123 4567") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Expiry Date
+                    OutlinedTextField(
+                        value = expiryDate,
+                        onValueChange = { expiryDate = it },
+                        label = { Text("Expiry Date") },
+                        placeholder = { Text("MM/YY") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // CVV
+                    OutlinedTextField(
+                        value = cvv,
+                        onValueChange = { cvv = it },
+                        label = { Text("CVV") },
+                        placeholder = { Text("123") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // Pay Button
+                    Button(
+                        onClick = {
+                            if (cardNumber.isBlank() || expiryDate.isBlank() || cvv.isBlank()) {
+                                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Payment Processing...", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                    ) {
+                        Text(text = "Pay", color = Color.White, fontSize = 16.sp)
                     }
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Pay Button
-        Button(
-            onClick = {
-                // Handle payment logic here
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
-        ) {
-            Text(text = "Pay", color = Color.White, fontSize = 16.sp)
-        }
+        )
     }
 }

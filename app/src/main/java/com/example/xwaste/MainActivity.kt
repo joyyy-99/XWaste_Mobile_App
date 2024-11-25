@@ -47,12 +47,22 @@ fun XWasteApp() {
             DashboardScreen(onNavigate = { route -> navController.navigate(route) })
         }
         composable("register") {
-            RegisterHouseholdScreen(onNavigate = { route -> navController.navigate(route) }) // Display UI-only Register Household screen
+            RegisterHouseholdScreen(onNavigate = { route -> navController.navigate(route) })
         }
-        composable("bins") { GarbageBinsScreen(onNavigate = { route -> navController.navigate(route) }) }
-        composable("subscribe") { SubscriptionScreen() }
-        composable("schedule") { SchedulingScreen(onNavigate = { route -> navController.navigate(route) }) }
-        composable("payment") { PaymentScreen() }
-        composable("feedback") { FeedbackScreen(onNavigate = { route -> navController.navigate(route) }) }
+        composable("bins") {
+            GarbageBinsScreen(onNavigate = { route -> navController.navigate(route) })
+        }
+        composable("subscribe") {
+            SubscriptionScreen(onNavigate = { route -> navController.navigate(route) })
+        }
+        composable("schedule") {
+            SchedulingScreen(onNavigate = { route -> navController.navigate(route) })
+        }
+        composable("payment") {
+            PaymentScreen(onNavigate = { route -> navController.navigate(route) })
+        }
+        composable("feedback") {
+            FeedbackScreen(onNavigate = { route -> navController.navigate(route) })
+        }
     }
 }

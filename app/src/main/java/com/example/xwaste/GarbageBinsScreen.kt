@@ -57,13 +57,19 @@ fun GarbageBinsScreen(onNavigate: (String) -> Unit) {
                     },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu"
-                            )
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
                         }
                     },
                     actions = {
+                        IconButton(onClick = {
+                            val intent = Intent(context, AccountActivity::class.java)
+                            context.startActivity(intent) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.account),
+                                contentDescription = "Account",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                         Image(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
@@ -89,7 +95,7 @@ fun GarbageBinsScreen(onNavigate: (String) -> Unit) {
                         .padding(paddingValues)
                         .fillMaxSize()
                         .padding(16.dp)
-                        .background(Color(0xFFF5F5F5)),
+                        .background(Color.White),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

@@ -62,6 +62,18 @@ class SignInActivity : ComponentActivity() {
     }
 
     private fun loginWithEmail(email: String, password: String) {
+        // Validate inputs
+        if (email.isBlank() || password.isBlank()) {
+            showToast("Email and Password cannot be empty")
+            return
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showToast("Invalid email format")
+            return
+        }
+
+        // Firebase authentication
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -72,21 +84,37 @@ class SignInActivity : ComponentActivity() {
             }
     }
 
+
     private fun registerWithEmail(username: String, email: String, phone: String, password: String) {
+        if (username.isBlank() || email.isBlank() || phone.isBlank() || password.isBlank()) {
+            showToast("All fields must be filled")
+            return
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showToast("Invalid email format")
+            return
+        }
+
+        if (!phone.matches("\\d{10,15}".toRegex())) {
+            showToast("Invalid phone number")
+            return
+        }
+
+        // Firebase registration
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val userId = firebaseAuth.currentUser?.uid ?: ""
                     val database = FirebaseDatabase.getInstance().reference
 
-                    // Create user data map
+                    // Save user data in the database
                     val user = mapOf(
                         "username" to username,
                         "email" to email,
                         "phone" to phone
                     )
 
-                    // Save user details in the "users" table
                     database.child("users").child(userId).setValue(user)
                         .addOnSuccessListener {
                             showToast("Registration successful!")
@@ -164,7 +192,7 @@ fun SignInScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5)) // White background
+            .background(Color.White) // White background
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -182,10 +210,9 @@ fun SignInScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .padding(16.dp)
-                    .background(Color.White),
+                    .padding(16.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(8.dp)
+                elevation = CardDefaults.cardElevation(1.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),

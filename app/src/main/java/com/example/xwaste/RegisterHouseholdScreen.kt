@@ -73,6 +73,15 @@ fun RegisterHouseholdScreen(onNavigate: (String) -> Unit) {
                         }
                     },
                     actions = {
+                        IconButton(onClick = {
+                            val intent = Intent(context, AccountActivity::class.java)
+                            context.startActivity(intent) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.account),
+                                contentDescription = "Account",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                         Image(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
@@ -144,22 +153,28 @@ fun RegisterHouseholdScreen(onNavigate: (String) -> Unit) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // MapView Integration
+                    // MapView Integration
                     AndroidView(
                         factory = { ctx ->
-                            val mapView = MapView(ctx)
-                            mapViewState.value = mapView
-                            mapView.setTileSource(TileSourceFactory.MAPNIK)
-                            mapView.setMultiTouchControls(true)
-                            mapView.controller.setZoom(15.0)
-                            mapView.controller.setCenter(GeoPoint(-1.286389, 36.817223)) // Default to Nairobi
+                            val mapView = MapView(ctx).apply {
+                                setTileSource(TileSourceFactory.MAPNIK)
+                                setMultiTouchControls(true)
+                                controller.setZoom(15.0) // Default zoom level
+                                controller.setCenter(GeoPoint(-1.286389, 36.817223)) // Default center (Nairobi)
 
+                                // Restrict zoom level to prevent excessive zooming out
+                                maxZoomLevel = 20.0 // Maximum zoom level
+                                minZoomLevel = 10.0 // Minimum zoom level
+                            }
+
+                            // Add touch listener for interactions
                             mapView.overlays.add(
                                 MapEventsOverlay(object : MapEventsReceiver {
                                     override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                                         p?.let {
                                             selectedCoordinates = it
-                                            val geocoder = Geocoder(context, Locale.getDefault())
-                                            val addresses: List<Address>? = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+                                            val geocoder = Geocoder(ctx, Locale.getDefault())
+                                            val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
                                             if (!addresses.isNullOrEmpty()) {
                                                 location = addresses[0].getAddressLine(0)
                                             }
@@ -176,10 +191,11 @@ fun RegisterHouseholdScreen(onNavigate: (String) -> Unit) {
                             mapView
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(Color.Gray)
+                            .fillMaxWidth() // Ensure the map spans the width of the screen
+                            .height(200.dp) // Restrict map height to 200dp
+                            .background(Color.Gray) // Background color in case of loading delay
                     )
+
 
                     Spacer(modifier = Modifier.height(16.dp))
 

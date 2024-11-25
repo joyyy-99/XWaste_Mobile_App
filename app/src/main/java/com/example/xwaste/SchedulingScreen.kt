@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
@@ -20,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -29,6 +29,7 @@ fun SchedulingScreen(onNavigate: (String) -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    var selectedDate by remember { mutableStateOf("") }
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -47,13 +48,19 @@ fun SchedulingScreen(onNavigate: (String) -> Unit) {
                     },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu"
-                            )
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
                         }
                     },
                     actions = {
+                        IconButton(onClick = {
+                            val intent = Intent(context, AccountActivity::class.java)
+                            context.startActivity(intent) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.account),
+                                contentDescription = "Account",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                         Image(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
@@ -62,8 +69,7 @@ fun SchedulingScreen(onNavigate: (String) -> Unit) {
                                 .clickable {
                                     FirebaseAuth.getInstance().signOut()
                                     val intent = Intent(context, SignInActivity::class.java)
-                                    intent.flags =
-                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     context.startActivity(intent)
                                 }
                         )
@@ -79,85 +85,70 @@ fun SchedulingScreen(onNavigate: (String) -> Unit) {
                     modifier = Modifier
                         .padding(paddingValues)
                         .fillMaxSize()
-                        .background(Color(0xFFF5F5F5))
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                        .padding(16.dp)
+                        .background(Color(0xFFF5F5F5)),
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    SchedulingContent()
+                    // Title
+                    Text(
+                        text = "Schedule Pickup",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    // Pickup Date Field
+                    OutlinedTextField(
+                        value = selectedDate,
+                        onValueChange = { selectedDate = it },
+                        label = { Text("Pickup Date", color = Color.Black) },
+                        placeholder = { Text("Select a date", color = Color.Gray) },
+                        readOnly = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                showDatePicker(context) { date ->
+                                    selectedDate = date
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.DateRange,
+                                    contentDescription = "Select Date",
+                                    tint = Color.Black
+                                )
+                            }
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.Black,
+                            unfocusedBorderColor = Color.Gray,
+                            cursorColor = Color.Black
+                        )
+                    )
+
+                    // Submit Button
+                    Button(
+                        onClick = {
+                            if (selectedDate.isNotBlank()) {
+                                saveToFirebase(selectedDate)
+                                Toast.makeText(context, "Pickup scheduled for $selectedDate", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("Submit")
+                    }
                 }
             }
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SchedulingContent() {
-    var selectedDate by remember { mutableStateOf("") }
-    val context = LocalContext.current
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Title
-        Text(
-            text = "Schedule Pickup",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.Black,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // Pickup Date Field
-        OutlinedTextField(
-            value = selectedDate,
-            onValueChange = { selectedDate = it },
-            label = { Text("Pickup Date") },
-            placeholder = { Text("Select a date", color = Color.Gray) },
-            readOnly = true,
-            modifier = Modifier.fillMaxWidth(),
-            trailingIcon = {
-                IconButton(onClick = {
-                    showDatePicker(context) { date ->
-                        selectedDate = date
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.DateRange,
-                        contentDescription = "Select Date",
-                        tint = Color.Black
-                    )
-                }
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Black,
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.Black
-            )
-        )
-
-        // Submit Button
-        Button(
-            onClick = {
-                if (selectedDate.isNotBlank()) {
-                    Toast.makeText(context, "Pickup scheduled for $selectedDate", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black,
-                contentColor = Color.White
-            )
-        ) {
-            Text("Submit")
-        }
     }
 }
 
@@ -179,4 +170,25 @@ fun showDatePicker(context: android.content.Context, onDateSelected: (String) ->
         day
     )
     datePickerDialog.show()
+}
+
+// Function to save the date to Firebase Realtime Database
+fun saveToFirebase(selectedDate: String) {
+    val database = FirebaseDatabase.getInstance("https://xwaste123-default-rtdb.firebaseio.com/")
+    val schedulingRef = database.getReference("scheduling")
+
+    val newEntryRef = schedulingRef.push()
+    val data = mapOf(
+        "date" to selectedDate,
+        "timestamp" to System.currentTimeMillis(),
+        "status" to "Scheduled"
+    )
+
+    newEntryRef.setValue(data)
+        .addOnSuccessListener {
+            println("Data saved successfully")
+        }
+        .addOnFailureListener { e ->
+            println("Failed to save data: ${e.message}")
+        }
 }

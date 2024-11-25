@@ -86,5 +86,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-database-ktx:20.4.0")
     implementation("org.osmdroid:osmdroid-android:6.1.15")
     implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("com.stripe:stripe-android:20.25.3")
+
 
 }

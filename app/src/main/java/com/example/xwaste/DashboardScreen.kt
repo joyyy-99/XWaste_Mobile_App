@@ -60,11 +60,6 @@ fun DashboardScreen(onNavigate: (String) -> Unit) {
                 TopAppBar(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-//                            Image(
-//                                painter = painterResource(id = R.drawable.ic_logo), // Replace with actual logo resource
-//                                contentDescription = "XWaste Logo",
-//                                modifier = Modifier.size(40.dp)
-//                            )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("XWaste", style = MaterialTheme.typography.titleMedium)
                         }
@@ -78,6 +73,18 @@ fun DashboardScreen(onNavigate: (String) -> Unit) {
                         }
                     },
                     actions = {
+                        IconButton(onClick = {
+                            // Navigate to Account Settings
+                            val intent = Intent(context, AccountActivity::class.java)
+                            context.startActivity(intent)
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.account), // Replace with your account icon resource
+                                contentDescription = "Account Settings",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Image(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
@@ -162,7 +169,6 @@ fun SideMenu(onClose: () -> Unit, onNavigate: (String) -> Unit) {
             "Subscribe" to "subscribe",
             "Payment" to "payment",
             "Feedback" to "feedback",
-            "Tracking" to "tracking"
         )
         menuItems.forEach { (label, route) ->
             SideMenuItem(label = label, onClick = {
@@ -172,6 +178,11 @@ fun SideMenu(onClose: () -> Unit, onNavigate: (String) -> Unit) {
         }
         Spacer(modifier = Modifier.weight(1f))
         HorizontalDivider()
+        SideMenuItem(label = "Account", onClick = {
+            val intent = Intent(context, AccountActivity::class.java)
+            context.startActivity(intent) // Navigate to AccountActivity
+            onClose()
+        })
         SideMenuItem(label = "Logout", onClick = {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(context, SignInActivity::class.java)
