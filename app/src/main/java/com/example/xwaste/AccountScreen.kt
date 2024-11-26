@@ -40,12 +40,12 @@ class AccountActivity : ComponentActivity() {
         database = FirebaseDatabase.getInstance().reference
 
         setContent {
-            XWasteTheme {
+            XWasteTheme { //Set  up the acconut screen with logout functionality
                 AccountScreen(
                     firebaseAuth = firebaseAuth,
                     database = database,
                     onLogout = {
-                        logoutUser()
+                        logoutUser() // Handle user logout
                     }
                 )
             }
@@ -97,9 +97,9 @@ fun AccountScreen(
             })
         }
     }
-
+    // Track updated user details locally for editing
     var updatedDetails = remember { mutableStateMapOf<String, String>() }
-
+    // Initialize updatedDetails map with values from userDetails
     userDetails.forEach { (key, value) ->
         if (!updatedDetails.containsKey(key)) {
             updatedDetails[key] = value
@@ -108,7 +108,7 @@ fun AccountScreen(
 
     ModalNavigationDrawer(
         drawerContent = {
-            SideMenu(
+            SideMenu( //sidebar menu for navigation
                 onClose = { scope.launch { drawerState.close() } },
                 onNavigate = { route ->
                     scope.launch { drawerState.close() }
@@ -130,11 +130,13 @@ fun AccountScreen(
                             Text("XWaste", style = MaterialTheme.typography.titleMedium)
                         }
                     },
+                    // button to open nav drawer
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
                         }
                     },
+                    //redirect to acountactivity when clicked
                     actions = {
                         IconButton(onClick = {
                             val intent = Intent(context, AccountActivity::class.java)
@@ -159,19 +161,22 @@ fun AccountScreen(
                     )
                 )
             },
+            // main content area
             content = { paddingValues ->
                 Box(
                     modifier = Modifier
                         .padding(paddingValues)
                         .fillMaxSize()
-                        .background(Color(0xFFF5F5F5)),
+                        .background(Color(0xFFF5F5F5)), // light gray background
                     contentAlignment = Alignment.Center
                 ) {
+                    // Column to display user details and action buttons
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.padding(16.dp)
                     ) {
+                        // header text indicating current mode
                         Text(
                             text = if (isEditing) "Edit Account Details" else "Account Details",
                             fontSize = 24.sp,
