@@ -72,7 +72,6 @@ STRIPE_PUBLISHABLE_KEY=pk_test_********************************
 * 🌐 Multilingual support (Kiswahili, English)
 
 
-
 A mobile-first leap toward smarter, cleaner cities. 🌍♻️
 
-```
+
