@@ -2,7 +2,7 @@
 
 **XWaste Mobile** is the resident-facing companion app to the XWaste web platform, created using **Kotlin** for Android. It offers Nairobi residents a streamlined way to manage their household waste—from requesting pickups and tracking garbage trucks to paying securely via Stripe—all from their smartphones.
 
----
+
 
 ## 📱 Key Features
 
@@ -14,7 +14,7 @@
 - 📬 **Submit Feedback** directly to administrators
 - 📢 **Access Recycling Education** through interactive tips
 
----
+
 
 ## 🔧 Tech Stack
 
@@ -27,7 +27,6 @@
 | **Payments**| Stripe Android SDK         |
 | **Maps**    | Google Maps API (planned)  |
 
----
 
 ## 📦 App Architecture
 
@@ -36,7 +35,7 @@
 - SharedPreferences for user session
 - Stripe integration for secure in-app transactions
 
----
+
 
 ## 🛠️ Setup Instructions
 
@@ -64,10 +63,6 @@ Create a `local.properties` file and add your Stripe publishable key:
 STRIPE_PUBLISHABLE_KEY=pk_test_********************************
 ```
 
----
-
-
----
 
 ## 💡 Future Enhancements
 
@@ -76,9 +71,8 @@ STRIPE_PUBLISHABLE_KEY=pk_test_********************************
 * 🇰🇪 M-Pesa mobile money integration
 * 🌐 Multilingual support (Kiswahili, English)
 
----
 
 
-> A mobile-first leap toward smarter, cleaner cities. 🌍♻️
+A mobile-first leap toward smarter, cleaner cities. 🌍♻️
 
 ```
